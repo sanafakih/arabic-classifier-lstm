@@ -1,0 +1,6 @@
+flask
+gunicorn
+numpy
+ai-edge-litert
+nltk
+qalsadi
