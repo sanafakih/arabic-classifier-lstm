@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مصنّف النصوص العربية</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    background: #eef1f6;
+    margin: 0;
+    padding: 48px 16px;
+    display: flex;
+    justify-content: center;
+    color: #1f2937;
+  }
+  .container { max-width: 640px; width: 100%; }
+  .header { text-align: center; margin-bottom: 24px; }
+  .header h1 { font-size: 24px; margin: 0 0 6px 0; }
+  .header p { color: #6b7280; font-size: 14px; margin: 0; }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e3e6ec;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+  }
+  textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    line-height: 1.6;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    resize: vertical;
+    direction: rtl;
+  }
+  textarea:focus { outline: none; border-color: #6366f1; }
+  .actions { display: flex; justify-content: flex-start; margin-top: 14px; }
+  button {
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:hover { background: #4338ca; }
+  .result-heading { font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 10px; }
+  .best-category { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .best-confidence { font-size: 13px; color: #6b7280; margin-bottom: 18px; }
+  .score-row {
+    display: grid;
+    grid-template-columns: 1fr 90px 42px;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+  .score-row .name { color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .score-row .track { background: #f1f2f6; border-radius: 4px; height: 8px; overflow: hidden; }
+  .score-row .fill { background: #a5adf7; height: 100%; }
+  .score-row .pct { text-align: left; color: #9ca3af; }
+  .score-row.top .name { font-weight: 700; color: #1f2937; }
+  .score-row.top .fill { background: #4f46e5; }
+  .score-row.top .pct { color: #4f46e5; font-weight: 600; }
+  footer { text-align: center; font-size: 12px; color: #9ca3af; margin-top: 12px; }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <h1>مصنّف النصوص العربية</h1>
+      <p>الصق فقرة عربية وسيحدد النموذج المجال الأقرب لها</p>
+    </div>
+
+    <div class="card">
+      <form method="POST">
+        <label for="text">النص</label>
+        <textarea id="text" name="text" placeholder="اكتب أو الصق الفقرة هنا...">{{ input_text }}</textarea>
+        <div class="actions">
+          <button type="submit">تصنيف النص</button>
+        </div>
+      </form>
+    </div>
+
+    {% if result %}
+    <div class="card">
+      <div class="result-heading">النتيجة</div>
+      <div class="best-category">{{ result.best_category }}</div>
+      <div class="best-confidence">نسبة الثقة: {{ result.best_pct }}%</div>
+
+      {% for cat, pct in result.all_scores %}
+      <div class="score-row {% if cat == result.best_category %}top{% endif %}">
+        <div class="name">{{ cat }}</div>
+        <div class="track">
+          <div class="fill" style="width: {{ pct }}%;"></div>
+        </div>
+        <div class="pct">{{ pct }}%</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <footer>Sarah Rmeity — Lebanese University</footer>
+
+  </div>
+</body>
+</html>
